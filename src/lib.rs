@@ -1,55 +1,57 @@
+#[macro_use]
+extern crate serde_derive;
+
+extern crate serde;
 extern crate serde_json;
 
+extern crate rand;
+use rand::Rng;
+
 use serde_json::{Error, Value};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 
-trait RandomResult {
+pub trait RandomResult {
     type Re;
     fn choice(&self) -> Self::Re;
 }
 
-struct Argv<'a> {
-    main: &'a str,
-    part: serde_json::Value,
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Argv {
+    pub main: String,
+    part: HashMap<String, Vec<String>>,
 }
 
-impl<'a> RandomResult for Argv<'a> {
+impl RandomResult for Argv {
     type Re = String;
     fn choice(&self) -> Self::Re {
-        String::new()
+        let radint = rand::thread_rng().gen_range(0, self.part["part1"].len());
+        let re = self.part["part1"][radint].clone();
+        re
     }
 }
 
-struct SingleComm<'a, T>
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SingleComm<T>
 where
     T: RandomResult,
 {
-    Comm: &'a str,
-    Argv: T,
+    pub comm: String,
+    pub argv: T,
 }
 
-pub fn read_file(filename: &str) -> &str {
+pub fn read_file(filename: &str) -> String {
     let mut f = File::open(filename).expect("cannot find file");
 
     let mut contents = String::new();
     f.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
 
-    contents.as_str()
+    contents
 }
 
-pub fn parse_json<'a>(content: &str) -> SingleComm<'a, Argv<'a>> {
-    let v: serde_json::Value = serde_json::from_str(content).unwrap();
-    let a: serde_json::Value = v["argv"];
-    let am = a["main"];
-    let part = a["part"];
-
-    return SingleComm {
-        Comm: v["comm"].as_str().unwrap(),
-        Argv: Argv {
-            main: am.as_str().unwrap(),
-            part: part,
-        },
-    };
+pub fn parse_json(content: String) -> Result<SingleComm<Argv>, Error> {
+    let sc: SingleComm<Argv> = serde_json::from_str(&content)?;
+    Ok(sc)
 }
