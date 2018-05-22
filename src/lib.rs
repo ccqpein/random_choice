@@ -1,13 +1,12 @@
 #[macro_use]
 extern crate serde_derive;
-
 extern crate serde;
 extern crate serde_json;
+use serde_json::Error;
 
 extern crate rand;
 use rand::Rng;
 
-use serde_json::{Error, Value};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;

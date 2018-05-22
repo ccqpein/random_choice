@@ -8,8 +8,6 @@ fn main() -> Result<(), String> {
     let js = random_choice::parse_json(content).unwrap();
     let re = format!("{}{}", js.argv.main, js.argv.choice());
 
-    //println!("{}", re);
-
     Command::new(js.comm)
         .arg(re)
         .output()
