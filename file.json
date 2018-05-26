@@ -2,6 +2,6 @@
     "comm":"open",
     "argv":{
 	"main":"http://en.cppreference.com/w/cpp/",
-	"part":{"part1":["language/reference","language/eval_order"]}
+	"part":["language/reference","language/eval_order"]
     }
 }

@@ -19,14 +19,14 @@ pub trait RandomResult {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Argv {
     pub main: String,
-    part: HashMap<String, Vec<String>>,
+    part: Vec<String>,
 }
 
 impl RandomResult for Argv {
     type Re = String;
     fn choice(&self) -> Self::Re {
-        let radint = rand::thread_rng().gen_range(0, self.part["part1"].len());
-        let re = self.part["part1"][radint].clone();
+        let radint = rand::thread_rng().gen_range(0, self.part.len());
+        let re = self.part[radint].clone();
         re
     }
 }
