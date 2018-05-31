@@ -19,15 +19,33 @@ pub trait RandomResult {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Argv {
     pub main: String,
-    part: Vec<String>,
+    parts: Option<Vec<String>>,
+    range_num: Option<RangeNum>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct RangeNum {
+    from: i32,
+    to: i32,
+    tail: Vec<String>,
 }
 
 impl RandomResult for Argv {
     type Re = String;
     fn choice(&self) -> Self::Re {
-        let radint = rand::thread_rng().gen_range(0, self.part.len());
-        let re = self.part[radint].clone();
-        re
+        if let Some(a) = &self.range_num {
+            let re_num = rand::thread_rng().gen_range(a.from, a.to).to_string();
+            let tail_radint = rand::thread_rng().gen_range(0, a.tail.len());
+            let tail = a.tail[tail_radint].clone();
+            return format!("{}{}", re_num, tail);
+        }
+
+        if let Some(a) = &self.parts {
+            let radint = rand::thread_rng().gen_range(0, a.len());
+            let re = a[radint].clone();
+            return re;
+        }
+        return String::new();
     }
 }
 

@@ -1,7 +1,10 @@
 {
-    "comm":"open",
+    "comm":"echo",
     "argv":{
 	"main":"http://en.cppreference.com/w/cpp/",
-	"part":["language/reference","language/eval_order"]
+	"parts":["language/reference_lalal","language/eval_order_lalal"],
+	"range_num":{"from":1,
+		     "to":10,
+		     "tail":["language/reference_hah","language/eval_order_haha"]}
     }
 }
